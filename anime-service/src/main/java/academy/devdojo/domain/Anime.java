@@ -1,38 +1,25 @@
 package academy.devdojo.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class Anime {
 
     private Long id;
     private String name;
 
     public static List<Anime> getAnimes () {
-        var naruto = new Anime (1, "Naruto");
-        var swordArtOnline = new Anime (2, "Sword Art Online");
-        var soloLeveling = new Anime (3, "Solo Leveling");
+        var naruto = new Anime (1L, "Naruto");
+        var swordArtOnline = new Anime (2L, "Sword Art Online");
+        var soloLeveling = new Anime (3L, "Solo Leveling");
 
         return List.of(naruto, swordArtOnline, soloLeveling);
     }
 
-    public Anime(long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

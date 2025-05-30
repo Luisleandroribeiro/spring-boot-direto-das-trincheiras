@@ -1,21 +1,28 @@
 package academy.devdojo.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import academy.devdojo.domain.Anime;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping ("/v1/animes")
 public class AnimeController {
-    @GetMapping
-    public String listAnimes (){
-        ArrayList<String> Animes =new ArrayList ();
-        Animes.add ("Naruto");
-        Animes.add ("Sword Art Online");
-        Animes.add ("Solo Leveling");
 
-        return Animes.toString();
+    @GetMapping
+    public List<Anime> listAll (@RequestParam (required = false) String name){
+        var animes = Anime.getAnimes();
+        if (name==null) return animes;
+
+        return animes.stream().filter(n->n.getName().equalsIgnoreCase(name)).toList();
     }
+
+    @GetMapping("{id}")
+    public Anime findById (@PathVariable Long id){
+        return Anime.getAnimes()
+                .stream()
+                .filter(animes->animes.getId().equals(id))
+                .findFirst().orElse(null);
+    }
+
 }

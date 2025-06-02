@@ -32,5 +32,4 @@ public class AnimeController {
         Anime.getAnimes().add(anime);
         return anime;
     }
-
 }

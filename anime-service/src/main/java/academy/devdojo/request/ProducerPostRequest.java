@@ -3,8 +3,8 @@ package academy.devdojo.request;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class ProducerPostRequest {
     private String name;
 }

@@ -33,7 +33,7 @@ public class AnimeController {
 
     @GetMapping("{id}")
     public ResponseEntity<AnimeGetResponse> findById (@PathVariable Long id){
-    log.debug("Request to find anime by id: {}", id);
+        log.debug("Request to find anime by id: {}", id);
 
         var animeGetResponse = Anime.getAnimes()
                 .stream()

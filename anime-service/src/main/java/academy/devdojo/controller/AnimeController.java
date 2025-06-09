@@ -3,15 +3,15 @@ package academy.devdojo.controller;
 import academy.devdojo.domain.Anime;
 import academy.devdojo.mapper.AnimeMapper;
 import academy.devdojo.request.AnimePostRequest;
-import academy.devdojo.request.AnimePostResponse;
 import academy.devdojo.response.AnimeGetResponse;
+import academy.devdojo.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping ("/v1/animes")
@@ -53,4 +53,18 @@ public class AnimeController {
         var response = MAPPER.toAnimePostResponse(anime);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteById (@PathVariable Long id){
+        log.debug("Delete Anime Id: {}", id);
+        var animeToDelete = Anime.getAnimes()
+                .stream()
+                .filter(animes->animes.getId().equals(id))
+                .findFirst()
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer Not Found"));
+        Anime.getAnimes().remove(animeToDelete);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

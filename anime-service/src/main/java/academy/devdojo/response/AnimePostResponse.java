@@ -1,4 +1,4 @@
-package academy.devdojo.request;
+package academy.devdojo.response;
 
 import lombok.Getter;
 import lombok.Setter;

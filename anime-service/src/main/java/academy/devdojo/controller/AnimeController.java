@@ -6,6 +6,7 @@ import academy.devdojo.request.AnimePostRequest;
 import academy.devdojo.request.AnimePutRequest;
 import academy.devdojo.response.AnimeGetResponse;
 import academy.devdojo.response.AnimePostResponse;
+import academy.devdojo.service.AnimeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,29 +21,27 @@ import java.util.List;
 public class AnimeController {
 
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
+    private AnimeService service;
+
+    public AnimeController(AnimeService service) {
+        this.service = service;
+    }
+
     @GetMapping
     public ResponseEntity<List<AnimeGetResponse>> listAll (@RequestParam (required = false) String name){
         log.debug("Request received to list all animes, param name '{}' ", name);
-        var animes = Anime.getAnimes();
-        var animeGetResponseList=MAPPER.toAnimeGetResponseList(animes);
-
-        if (name==null) return ResponseEntity.ok(animeGetResponseList);
-
-        var animeList = animeGetResponseList.stream().filter(n->n.getName().equalsIgnoreCase(name)).toList();
-        return ResponseEntity.ok(animeList);
+        var animes = service.findAll(name);
+        var producerGetResponses = MAPPER.toAnimeGetResponseList(animes);
+        return ResponseEntity.ok(producerGetResponses);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<AnimeGetResponse> findById (@PathVariable Long id){
         log.debug("Request to find anime by id: {}", id);
 
-        var animeGetResponse = Anime.getAnimes()
-                .stream()
-                .filter(animes->animes.getId().equals(id))
-                .findFirst()
-                .map(MAPPER::toAnimeGetResponse)
-                .orElse(null);
-        return ResponseEntity.ok(animeGetResponse);
+        var animes = service.findByIdOrThrowNotFound(id);
+        var producerGetResponse = MAPPER.toAnimeGetResponse(animes);
+        return ResponseEntity.ok(producerGetResponse);
 
     }
 
@@ -50,20 +49,17 @@ public class AnimeController {
     public ResponseEntity<AnimePostResponse>  addAnime (@RequestBody AnimePostRequest request){
         log.debug("Request to save anime: {}", request);
         var anime = MAPPER.toAnime(request);
-        Anime.getAnimes().add(anime);
-        var response = MAPPER.toAnimePostResponse(anime);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        var animeSaved = service.save(anime);
+        var animeGetResponse = MAPPER.toAnimePostResponse(animeSaved);
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(animeGetResponse);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteById (@PathVariable Long id){
         log.debug("Delete Anime Id: {}", id);
-        var animeToDelete = Anime.getAnimes()
-                .stream()
-                .filter(animes->animes.getId().equals(id))
-                .findFirst()
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer Not Found"));
-        Anime.getAnimes().remove(animeToDelete);
+        service.delete(id);
 
         return ResponseEntity.noContent().build();
     }
@@ -71,15 +67,8 @@ public class AnimeController {
     @PutMapping
     public ResponseEntity <Void> update (@RequestBody AnimePutRequest request){
         log.debug("Request to update anime {}", request);
-        var animeToRemove = Anime.getAnimes()
-                .stream()
-                .filter(animes->animes.getId().equals(request.getId()))
-                .findFirst()
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer Not Found"));
-
         var animeToUpdate = MAPPER.toAnime(request);
-        Anime.getAnimes().remove(animeToRemove);
-        Anime.getAnimes().add(animeToUpdate);
+        service.update(animeToUpdate);
 
         return ResponseEntity.noContent().build();
     }

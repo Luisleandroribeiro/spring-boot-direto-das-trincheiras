@@ -1,14 +1,13 @@
 package academy.devdojo.repository;
 
 import academy.devdojo.domain.Anime;
-import academy.devdojo.domain.Producer;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+@Repository
 public class AnimeHardcodedRepository {
     private static final List<Anime> ANIMES = new ArrayList<>();
 
@@ -24,27 +23,28 @@ public class AnimeHardcodedRepository {
     }
 
 
-    public Optional <Anime> findById (Long id){
+    public Optional<Anime> findById(Long id) {
         return ANIMES.stream()
-                .filter(animes->animes.getId().equals(id))
+                .filter(animes -> animes.getId().equals(id))
                 .findFirst();
     }
-    public List<Anime> findByName (String name){
+
+    public List<Anime> findByName(String name) {
         return ANIMES.stream()
-                .filter(animes-> animes.getName().equals(name)).toList();
+                .filter(animes -> animes.getName().equals(name)).toList();
 
     }
 
-    public Anime save (Anime anime){
+    public Anime save(Anime anime) {
         ANIMES.add(anime);
         return anime;
     }
 
-    public void delete (Anime anime){
+    public void delete(Anime anime) {
         ANIMES.remove(anime);
     }
 
-    public void update (Anime anime){
+    public void update(Anime anime) {
         delete(anime);
         save(anime);
     }

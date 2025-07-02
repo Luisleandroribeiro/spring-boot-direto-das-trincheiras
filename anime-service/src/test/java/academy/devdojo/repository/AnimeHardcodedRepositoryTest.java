@@ -34,7 +34,7 @@ public class AnimeHardcodedRepositoryTest {
     @Test
     @DisplayName("findAll returns a list with all animes")
     @Order(1)
-    void findAll_ReturnsAllAnimess_WhenSuccessful() {
+    void findAll_ReturnsAllAnimes_WhenSuccessful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var animes = repository.findAll();
@@ -46,7 +46,7 @@ public class AnimeHardcodedRepositoryTest {
     @Test
     @DisplayName("findById returns a anime with given id")
     @Order(2)
-    void findAll_ReturnsAnimesById_WhenSucessful(){
+    void findAll_ReturnsAnimesById_WhenSuccessful(){
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
         var expectedAnimes = animeList.getFirst();
         var animes = repository.findById(expectedAnimes.getId());
@@ -80,7 +80,7 @@ public class AnimeHardcodedRepositoryTest {
     @Test
     @DisplayName("save creates a anime")
     @Order(5)
-    void save_CreatesAnime_WhenSucessful(){
+    void save_CreatesAnime_WhenSuccessful(){
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
         var animeToSave = Anime.builder().id(99L).name("Pokemon").build();
         var anime = repository.save(animeToSave);

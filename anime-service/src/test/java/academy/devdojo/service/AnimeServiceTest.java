@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +76,7 @@ class AnimeServiceTest {
     @Test
     @DisplayName("findById returns a anime with given id")
     @Order(4)
-    void findById_ReturnsAnimeById_WhenSucessful() {
+    void findById_ReturnsAnimeById_WhenSuccessful() {
         var expectedAnime = animesList.getFirst();
         BDDMockito.when(repository.findById(expectedAnime.getId())).thenReturn(Optional.of(expectedAnime));
         var animes = service.findByIdOrThrowNotFound(expectedAnime.getId());

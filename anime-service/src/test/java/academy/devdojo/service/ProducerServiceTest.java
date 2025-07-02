@@ -28,7 +28,7 @@ class ProducerServiceTest {
     private List<Producer> producerList;
 
     @BeforeEach
-    void init(){
+    void init() {
         var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
         var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
         var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
@@ -50,7 +50,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("findAll returns list with found object when name exists")
     @Order(2)
-    void findByName_ReturnsFoundProducerInList_WhenNameIsFound(){
+    void findByName_ReturnsFoundProducerInList_WhenNameIsFound() {
         var producer = producerList.getFirst();
         List<Producer> expectedProducersFound = singletonList(producer);
         BDDMockito.when(repository.findByName(producer.getName())).thenReturn(expectedProducersFound);
@@ -63,7 +63,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("findAll returns empty list when name is not found")
     @Order(3)
-    void findByName_ReturnsEmptyList_WhenNameIsNotFound(){
+    void findByName_ReturnsEmptyList_WhenNameIsNotFound() {
         var name = "not-found";
         BDDMockito.when(repository.findByName(name)).thenReturn(emptyList());
 
@@ -76,7 +76,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("findById returns a producer with given id")
     @Order(4)
-    void findById_ReturnsProducerById_WhenSucessful(){
+    void findById_ReturnsProducerById_WhenSucessful() {
         var expectedProducer = producerList.getFirst();
         BDDMockito.when(repository.findById(expectedProducer.getId())).thenReturn(Optional.of(expectedProducer));
         var producers = service.findByIdOrThrowNotFound(expectedProducer.getId());
@@ -87,12 +87,12 @@ class ProducerServiceTest {
     @Test
     @DisplayName("findById throws responseStatusException when producer is not found")
     @Order(5)
-    void findById_ThrowsResponseException_WhenProducerIsNotFound(){
+    void findById_ThrowsResponseException_WhenProducerIsNotFound() {
         var expectedProducer = producerList.getFirst();
         BDDMockito.when(repository.findById(expectedProducer.getId())).thenReturn(Optional.empty());
 
         Assertions.assertThatException()
-                .isThrownBy(()->service.findByIdOrThrowNotFound(expectedProducer.getId()))
+                .isThrownBy(() -> service.findByIdOrThrowNotFound(expectedProducer.getId()))
                 .isInstanceOf(ResponseStatusException.class);
 
     }
@@ -109,6 +109,7 @@ class ProducerServiceTest {
         Assertions.assertThat(saveProducer).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();
 
     }
+
     @Test
     @DisplayName("delete removes a producer")
     @Order(7)
@@ -118,7 +119,7 @@ class ProducerServiceTest {
         BDDMockito.doNothing().when(repository).delete(producerToDelete);
 
 
-        Assertions.assertThatNoException().isThrownBy(()-> service.delete(producerToDelete.getId()));
+        Assertions.assertThatNoException().isThrownBy(() -> service.delete(producerToDelete.getId()));
     }
 
     @Test
@@ -129,7 +130,7 @@ class ProducerServiceTest {
         BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.empty());
 
         Assertions.assertThatException()
-                .isThrownBy(()->service.delete(producerToDelete.getId()))
+                .isThrownBy(() -> service.delete(producerToDelete.getId()))
                 .isInstanceOf(ResponseStatusException.class);
     }
 
@@ -144,7 +145,7 @@ class ProducerServiceTest {
 
 
         Assertions.assertThatNoException()
-                .isThrownBy(()->service.update(producerToUpdate));
+                .isThrownBy(() -> service.update(producerToUpdate));
 
     }
 
@@ -157,7 +158,7 @@ class ProducerServiceTest {
 
 
         Assertions.assertThatException()
-                .isThrownBy(()->service.update(producerToUpdate))
+                .isThrownBy(() -> service.update(producerToUpdate))
                 .isInstanceOf(ResponseStatusException.class);
 
     }

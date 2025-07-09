@@ -192,7 +192,7 @@ class ProducerControllerTest {
 
     @Test
     @DisplayName("DELETE v1/producers/99 throws ResponseStatusException when producer is not found")
-    @Order(8)
+    @Order(10)
     void delete_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception{
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 

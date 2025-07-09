@@ -27,8 +27,8 @@ public class AnimeController {
     public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
         log.debug("Request received to list all animes, param name '{}' ", name);
         var animes = service.findAll(name);
-        var producerGetResponses = mapper.toAnimeGetResponseList(animes);
-        return ResponseEntity.ok(producerGetResponses);
+        var animeGetResponses = mapper.toAnimeGetResponseList(animes);
+        return ResponseEntity.ok(animeGetResponses);
     }
 
     @GetMapping("{id}")
@@ -36,8 +36,8 @@ public class AnimeController {
         log.debug("Request to find anime by id: {}", id);
 
         var animes = service.findByIdOrThrowNotFound(id);
-        var producerGetResponse = mapper.toAnimeGetResponse(animes);
-        return ResponseEntity.ok(producerGetResponse);
+        var animeGetResponse = mapper.toAnimeGetResponse(animes);
+        return ResponseEntity.ok(animeGetResponse);
 
     }
 

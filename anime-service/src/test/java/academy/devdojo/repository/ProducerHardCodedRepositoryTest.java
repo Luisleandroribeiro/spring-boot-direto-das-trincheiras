@@ -1,5 +1,6 @@
 package academy.devdojo.repository;
 
+import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -9,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 //teste unitario tem que ser rapido, e tem que testar a funcionalidade unitaria daquela classe alvo,
@@ -20,16 +19,15 @@ import java.util.List;
 class ProducerHardCodedRepositoryTest {
     @InjectMocks
     private ProducerHardCodedRepository repository;
-
     @Mock
     private ProducerData producerData;
     private List<Producer> producerList;
+    @InjectMocks
+    private ProducerUtils producerUtils;
+
     @BeforeEach
-    void init(){
-        var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
-        var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
-        producerList = new ArrayList<>(List.of(ufotable, witStudio, studioGhibli));
+    void init() {
+        producerList = producerUtils.newProducerList();
     }
 
     @Test
@@ -47,7 +45,7 @@ class ProducerHardCodedRepositoryTest {
     @Test
     @DisplayName("findById returns a producer with given id")
     @Order(2)
-    void findAll_ReturnsProducerById_WhenSuccessful(){
+    void findAll_ReturnsProducerById_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var expectedProducer = producerList.getFirst();
         var producers = repository.findById(expectedProducer.getId());
@@ -59,7 +57,7 @@ class ProducerHardCodedRepositoryTest {
     @Test
     @DisplayName("findByName returns empty list when name is null")
     @Order(3)
-    void findByName_ReturnsEmptyList_WhenNameIsNull(){
+    void findByName_ReturnsEmptyList_WhenNameIsNull() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var producers = repository.findByName(null);
@@ -71,7 +69,7 @@ class ProducerHardCodedRepositoryTest {
     @Test
     @DisplayName("findByName returns list with found object when name exists")
     @Order(4)
-    void findByName_ReturnsFoundProducerInList_WhenNameIsFound(){
+    void findByName_ReturnsFoundProducerInList_WhenNameIsFound() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var expectedProducer = producerList.getFirst();
         var producers = repository.findByName(expectedProducer.getName());
@@ -85,7 +83,7 @@ class ProducerHardCodedRepositoryTest {
     void save_CreatesProducer_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        var producerToSave = Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
+        var producerToSave = producerUtils.newProducerToSave();
         var producer = repository.save(producerToSave);
 
         Assertions.assertThat(producer).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();

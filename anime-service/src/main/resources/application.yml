@@ -15,3 +15,8 @@ server:
     include-stacktrace: on_param
   tomcate:
     max: 20
+
+database:
+  url: localhost:3204
+  username: devdojo
+  password: devdojo

@@ -16,8 +16,7 @@ import java.util.Optional;
 public class AnimeHardcodedRepository {
 
     private final AnimeData animeData;
-    @Qualifier("connectionMySql")
-    private final Connection connection;
+
 
     public List<Anime> findAll() {
         return animeData.getAnimes();
@@ -31,7 +30,6 @@ public class AnimeHardcodedRepository {
     }
 
     public List<Anime> findByName(String name) {
-        log.debug(connection);
         return animeData.getAnimes().stream()
                 .filter(animes -> animes.getName().equalsIgnoreCase(name)).toList();
 

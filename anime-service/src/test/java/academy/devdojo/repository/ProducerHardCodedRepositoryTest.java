@@ -12,13 +12,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-//teste unitario tem que ser rapido, e tem que testar a funcionalidade unitaria daquela classe alvo,
-
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProducerHardCodedRepositoryTest {
     @InjectMocks
-    private ProducerHardCodedRepository repository;
+    private ProducerHardCodedRepository respository;
     @Mock
     private ProducerData producerData;
     private List<Producer> producerList;
@@ -36,22 +34,19 @@ class ProducerHardCodedRepositoryTest {
     void findAll_ReturnsAllProducers_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        var producers = repository.findAll();
-        Assertions.assertThat(producers)
-                .isNotNull()
-                .hasSize(producerList.size());
+        var producers = respository.findAll();
+        Assertions.assertThat(producers).isNotNull().hasSameElementsAs(producerList);
     }
 
     @Test
     @DisplayName("findById returns a producer with given id")
     @Order(2)
-    void findAll_ReturnsProducerById_WhenSuccessful() {
+    void findById_ReturnsProducerById_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
         var expectedProducer = producerList.getFirst();
-        var producers = repository.findById(expectedProducer.getId());
-        Assertions.assertThat(producers)
-                .isPresent()
-                .contains(expectedProducer);
+        var producers = respository.findById(expectedProducer.getId());
+        Assertions.assertThat(producers).isPresent().contains(expectedProducer);
     }
 
     @Test
@@ -60,10 +55,8 @@ class ProducerHardCodedRepositoryTest {
     void findByName_ReturnsEmptyList_WhenNameIsNull() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        var producers = repository.findByName(null);
-        Assertions.assertThat(producers)
-                .isNotNull()
-                .isEmpty();
+        var producers = respository.findByName(null);
+        Assertions.assertThat(producers).isNotNull().isEmpty();
     }
 
     @Test
@@ -71,10 +64,10 @@ class ProducerHardCodedRepositoryTest {
     @Order(4)
     void findByName_ReturnsFoundProducerInList_WhenNameIsFound() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
         var expectedProducer = producerList.getFirst();
-        var producers = repository.findByName(expectedProducer.getName());
-        Assertions.assertThat(producers)
-                .contains(expectedProducer);
+        var producers = respository.findByName(expectedProducer.getName());
+        Assertions.assertThat(producers).hasSize(1).contains(expectedProducer);
     }
 
     @Test
@@ -84,11 +77,11 @@ class ProducerHardCodedRepositoryTest {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var producerToSave = producerUtils.newProducerToSave();
-        var producer = repository.save(producerToSave);
+        var producer = respository.save(producerToSave);
 
         Assertions.assertThat(producer).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();
 
-        var producerSavedOptional = repository.findById(producerToSave.getId());
+        var producerSavedOptional = respository.findById(producerToSave.getId());
 
         Assertions.assertThat(producerSavedOptional).isPresent().contains(producerToSave);
     }
@@ -100,9 +93,9 @@ class ProducerHardCodedRepositoryTest {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var producerToDelete = producerList.getFirst();
-        repository.delete(producerToDelete);
+        respository.delete(producerToDelete);
 
-        var producers = repository.findAll();
+        var producers = respository.findAll();
 
         Assertions.assertThat(producers).isNotEmpty().doesNotContain(producerToDelete);
     }
@@ -115,13 +108,15 @@ class ProducerHardCodedRepositoryTest {
         var producerToUpdate = this.producerList.getFirst();
         producerToUpdate.setName("Aniplex");
 
-        repository.update(producerToUpdate);
+        respository.update(producerToUpdate);
 
         Assertions.assertThat(this.producerList).contains(producerToUpdate);
 
-        var producerUpdatedOptional = repository.findById(producerToUpdate.getId());
+        var producerUpdatedOptional = respository.findById(producerToUpdate.getId());
 
         Assertions.assertThat(producerUpdatedOptional).isPresent();
         Assertions.assertThat(producerUpdatedOptional.get().getName()).isEqualTo(producerToUpdate.getName());
     }
+
+
 }

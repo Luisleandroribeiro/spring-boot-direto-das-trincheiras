@@ -3,20 +3,22 @@ spring:
     name: anime-service
   threads:
     virtual:
-      enable: true
+      enabled: true
 
 logging:
   level:
     academy.devdojo: debug
 server:
-  serverlet:
+  servlet:
     context-path: /
+
   error:
     include-stacktrace: on_param
-  tomcate:
-    max: 20
+  tomcat:
+    threads:
+      max: 20
 
 database:
-  url: ${DB_URL:localhost}:${DB_PORT:3382}
-  username: ${LOCAL_USERNAME}
-  password: ${LOCAL_PASSWORD}
+  url: ${DB_URL:localhost}:${DB_PORT:3306}
+  username: ${LOCAL_USERNAME:william}
+  password: ${LOCAL_PASSWORD:devdojo}

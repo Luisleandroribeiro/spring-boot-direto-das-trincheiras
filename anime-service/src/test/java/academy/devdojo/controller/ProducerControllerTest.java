@@ -14,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -24,10 +23,10 @@ import java.util.List;
 
 @WebMvcTest(controllers = ProducerController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = "academy.devdojo")
+@ComponentScan(basePackages = {"academy.devdojo"})
 //@ActiveProfiles("test")
 class ProducerControllerTest {
-    private final static String URL = "/v1/producers";
+    private static final String URL = "/v1/producers";
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -58,7 +57,6 @@ class ProducerControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
-
     @Test
     @DisplayName("GET v1/producers?name=Ufotable returns list with found object when name exists")
     @Order(2)
@@ -73,7 +71,6 @@ class ProducerControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
-
     @Test
     @DisplayName("GET v1/producers?name=x returns empty list when name is not found")
     @Order(3)
@@ -81,6 +78,7 @@ class ProducerControllerTest {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var response = fileUtils.readResourceFile("producer/get-producer-x-name-200.json");
         var name = "x";
+
         mockMvc.perform(MockMvcRequestBuilders.get(URL).param("name", name))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -94,6 +92,7 @@ class ProducerControllerTest {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var response = fileUtils.readResourceFile("producer/get-producer-by-id-200.json");
         var id = 1L;
+
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -101,11 +100,12 @@ class ProducerControllerTest {
     }
 
     @Test
-    @DisplayName("GET v1/producers/99 throws responseStatusException 404 when producer is not found")
+    @DisplayName("GET v1/producers/99 throws ResponseStatusException 404 when producer is not found")
     @Order(5)
-    void findById_ThrowsResponseException_WhenProducerIsNotFound() throws Exception {
+    void findById_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var id = 99L;
+
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -119,6 +119,7 @@ class ProducerControllerTest {
         var request = fileUtils.readResourceFile("producer/post-request-producer-200.json");
         var response = fileUtils.readResourceFile("producer/post-response-producer-201.json");
         var producerToSave = producerUtils.newProducerToSave();
+
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(producerToSave);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -138,8 +139,8 @@ class ProducerControllerTest {
     @Order(7)
     void update_UpdatesProducer_WhenSuccessful() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var request = fileUtils.readResourceFile("producer/put-request-producer-200.json");
 
+        var request = fileUtils.readResourceFile("producer/put-request-producer-200.json");
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
                         .content(request)
@@ -152,10 +153,9 @@ class ProducerControllerTest {
     @Test
     @DisplayName("PUT v1/producers throws ResponseStatusException when producer is not found")
     @Order(8)
-    void update_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception {
+    void update_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var request = fileUtils.readResourceFile("producer/put-request-producer-404.json");
-
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
                         .content(request)
@@ -164,17 +164,17 @@ class ProducerControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer Not Found"));
+
     }
 
     @Test
-    @DisplayName("DELET v1/producers/1 removes a producer")
+    @DisplayName("DELETE v1/producers/1 removes a producer")
     @Order(9)
     void delete_RemoveProducer_WhenSuccessful() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-
         var id = producerList.getFirst().getId();
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete(URL + "/{id}", id))
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -182,14 +182,14 @@ class ProducerControllerTest {
     @Test
     @DisplayName("DELETE v1/producers/99 throws ResponseStatusException when producer is not found")
     @Order(10)
-    void delete_ThrowsResponseStatusException_whenProducerIsNotFound() throws Exception {
+    void delete_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-
         var id = 99L;
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete(URL + "/{id}", id))
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer Not Found"));
+
     }
 }

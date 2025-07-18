@@ -9,15 +9,14 @@ logging:
   level:
     academy.devdojo: debug
 server:
+  port: 8081
   servlet:
     context-path: /
-
   error:
     include-stacktrace: on_param
   tomcat:
     threads:
       max: 20
-
 database:
   url: ${DB_URL:localhost}:${DB_PORT:3306}
   username: ${LOCAL_USERNAME:william}

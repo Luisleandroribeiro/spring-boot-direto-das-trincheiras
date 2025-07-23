@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -199,13 +200,12 @@ class UserControllerTest {
 
     @ParameterizedTest
     @MethodSource("postUserBadRequestSource")
-    @DisplayName("POST v1/users returns bad request when fields are empty")
+    @DisplayName("POST v1/users returns bad request when fields are invalid")
     @Order(11)
-    void save_ReturnsBadRequest_WhenFieldsAreEmpty(String fileName, List<String> errors) throws Exception {
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
         var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .post(URL)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -214,32 +214,66 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andReturn();
 
-        Exception resolvedException = mvcResult.getResolvedException();
+        var resolvedException = mvcResult.getResolvedException();
 
         Assertions.assertThat(resolvedException).isNotNull();
 
-
-        Assertions.assertThat(resolvedException.getMessage())
-                .contains(errors);
-
+        Assertions.assertThat(resolvedException.getMessage()).contains(errors);
     }
 
     private static Stream<Arguments> postUserBadRequestSource (){
 
-        var firstNameRequiredError = "The field 'firstName' is required";
-        var lastNameRequiredError = "The field 'lastName' is required";
-        var emailRequiredError = "The field 'email' is required";
-        var emailInvalidError = "The email is not valid";
+        var allRequiredErrors = allRequiredErrors();
+        var invalidEmailError = invalidEmailErrors();
 
-        var allErros = List.of(firstNameRequiredError, lastNameRequiredError, emailRequiredError);
-
-        var emailError = Collections.singletonList(emailInvalidError);
         return Stream.of(
-                Arguments.of("post-request-user-empty-fields-400.json", allErros),
-                Arguments.of("post-request-user-blank-fields-400.json", allErros),
-                Arguments.of("post-request-user-invalid-email-400.json", emailError)
+                Arguments.of("post-request-user-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("post-request-user-blank-fields-400.json", allRequiredErrors),
+                Arguments.of("post-request-user-invalid-email-400.json", invalidEmailError)
 
         );
     }
+    private static List<String> invalidEmailErrors(){
+        var emailInvalidError= "The email is not valid";
+        return List.of(emailInvalidError);
+    }
+
+    private static List<String> allRequiredErrors(){
+        var firstNameRequiredError = "The field 'firstName' is required";
+        var lastNameRequiredError = "The field 'lastName' is required";
+        var emailRequiredError = "The field 'email' is required";
+        return new ArrayList<>(List.of(firstNameRequiredError, lastNameRequiredError, emailRequiredError));
+    }
+
+    @ParameterizedTest
+    @MethodSource("putUserBadRequestSource")
+    @DisplayName("Put v1/users returns bad request when fields are invalid")
+    @Order(12)
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+
+        var request = fileUtils.readResourceFile("user/put-request-user-200.json");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    private static Stream<Arguments> putUserBadRequestSource (){
+
+        var allRequiredErrors = allRequiredErrors();
+        var invalidEmailError = invalidEmailErrors();
+        allRequiredErrors.add("The field 'id' can't be null");
+        return Stream.of(
+                Arguments.of("put-request-user-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-user-blank-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-user-invalid-email-400.json", invalidEmailError)
+
+        );
+    }
+
 
 }

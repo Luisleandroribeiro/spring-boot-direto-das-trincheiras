@@ -6,6 +6,8 @@ import academy.devdojo.repository.UserHardCodedRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
@@ -134,7 +136,7 @@ class UserServiceTest {
     @Order(9)
     void update_UpdatesUser_WhenSuccessful() {
         var userToUpdate = userList.getFirst();
-        userToUpdate.setFirstName("Andrew");
+        userToUpdate.setFirstName("Fallen");
 
         BDDMockito.when(repository.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
         BDDMockito.doNothing().when(repository).update(userToUpdate);
@@ -154,4 +156,5 @@ class UserServiceTest {
                 .isThrownBy(() -> service.update(userToUpdate))
                 .isInstanceOf(ResponseStatusException.class);
     }
+
 }

@@ -108,7 +108,7 @@ class UserHardCodedRepositoryTest {
     void update_UpdatesUser_WhenSuccessful() {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var userToUpdate = this.userList.getFirst();
-        userToUpdate.setFirstName("Andrew");
+        userToUpdate.setFirstName("Fallen");
 
         respository.update(userToUpdate);
 

@@ -249,17 +249,23 @@ class UserControllerTest {
     @MethodSource("putUserBadRequestSource")
     @DisplayName("Put v1/users returns bad request when fields are invalid")
     @Order(12)
-    void update_ReturnsBadRequest_WhenFieldsAreInvalid() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
-        var request = fileUtils.readResourceFile("user/put-request-user-200.json");
-        mockMvc.perform(MockMvcRequestBuilders
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+
+        Assertions.assertThat(resolvedException).isNotNull();
+
+        Assertions.assertThat(resolvedException.getMessage()).contains(errors);
     }
 
     private static Stream<Arguments> putUserBadRequestSource (){
@@ -274,6 +280,4 @@ class UserControllerTest {
 
         );
     }
-
-
 }

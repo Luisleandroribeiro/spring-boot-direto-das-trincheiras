@@ -5,7 +5,11 @@ import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import academy.devdojo.repository.ProducerData;
 import academy.devdojo.repository.ProducerHardCodedRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @WebMvcTest(controllers = ProducerController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -191,5 +196,79 @@ class ProducerControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer Not Found"));
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("postProducersBadRequestSource")
+    @DisplayName("POST v1/producers returns bad request when fields are invalid")
+    @Order(11)
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        var request = fileUtils.readResourceFile("producer/%s".formatted(fileName));
+
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .post(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("x-api-key", "v1")
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException).isNotNull();
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException.getMessage()).contains(errors);
+    }
+
+    private static Stream<Arguments> postProducersBadRequestSource (){
+        var allRequiredErrors = requiredErrors();
+
+        return Stream.of(
+                Arguments.of("post-request-producer-blank-fields-400.json", allRequiredErrors),
+                Arguments.of("post-request-producer-empty-fields-400.json", allRequiredErrors)
+
+        );
+    }
+    private static List<String> requiredErrors(){
+        var nameIsRequired= "The field 'name' is required";
+        return List.of(nameIsRequired);
+    }
+
+
+
+    @ParameterizedTest
+    @MethodSource("putProducersBadRequestSource")
+    @DisplayName("Put v1/producers returns bad request when fields are invalid")
+    @Order(12)
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        var request = fileUtils.readResourceFile("producer/%s".formatted(fileName));
+
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException).isNotNull();
+
+        Assertions.assertThat(resolvedException.getMessage()).contains(errors);
+    }
+
+    private static Stream<Arguments> putProducersBadRequestSource (){
+
+        var allRequiredErrors = new java.util.ArrayList<>(requiredErrors());
+        allRequiredErrors.add("The field 'id' can't be null");
+        return Stream.of(
+                Arguments.of("put-request-producer-blank-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-producer-empty-fields-400.json", allRequiredErrors)
+
+        );
     }
 }

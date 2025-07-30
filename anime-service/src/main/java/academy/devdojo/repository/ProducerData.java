@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class ProducerData {
 
-    private  final List<Producer> producers = new ArrayList<>();
+    private final List<Producer> producers = new ArrayList<>();
 
     {
         var mappa = Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now()).build();

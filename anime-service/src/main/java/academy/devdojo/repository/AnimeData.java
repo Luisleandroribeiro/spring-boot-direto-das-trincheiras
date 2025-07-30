@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 public class AnimeData {
     private static final List<Anime> animes = new ArrayList<>();

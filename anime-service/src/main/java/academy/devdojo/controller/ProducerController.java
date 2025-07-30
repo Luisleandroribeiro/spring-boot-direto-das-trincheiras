@@ -65,7 +65,7 @@ public class ProducerController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody @Valid  ProducerPutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody @Valid ProducerPutRequest request) {
         log.debug("Request to update anime {}", request);
         var producerToUpdate = mapper.toProducer(request);
         service.update(producerToUpdate);

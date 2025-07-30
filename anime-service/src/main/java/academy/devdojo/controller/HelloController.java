@@ -3,8 +3,6 @@ package academy.devdojo.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
@@ -12,12 +10,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 public class HelloController {
     @GetMapping
-    public String hi (){
+    public String hi() {
         return "OMAE WA MOU SHINDE IRU";
     }
+
     @PostMapping
-    public Long save (@RequestBody String name) {
+    public Long save(@RequestBody String name) {
         log.info("save('{}')", name);
-        return ThreadLocalRandom.current().nextLong(1,1000);
+        return ThreadLocalRandom.current().nextLong(1, 1000);
     }
 }

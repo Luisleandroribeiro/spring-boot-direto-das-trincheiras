@@ -10,24 +10,25 @@ public class HeroController {
     private static final List<String> Heroes = List.of("Guts", "Zoro", "Kakashi", "Goku");
 
     @GetMapping
-    public List <String> listAllHeroes(){
+    public List<String> listAllHeroes() {
         return Heroes;
     }
 
     @GetMapping("filter")
-    public List <String> listAllHeroesParam(@RequestParam String name){
-        return Heroes.stream().filter(hero->hero.equalsIgnoreCase(name)).toList();
+    public List<String> listAllHeroesParam(@RequestParam String name) {
+        return Heroes.stream().filter(hero -> hero.equalsIgnoreCase(name)).toList();
     }
 
     @GetMapping("filterList")
-    public List <String> listAllHeroesParamList(@RequestParam List <String> names){
+    public List<String> listAllHeroesParamList(@RequestParam List<String> names) {
         return Heroes.stream().filter(names::contains).toList();
     }
+
     @GetMapping("{name}")
-    public String findByeName (@PathVariable String name){
+    public String findByeName(@PathVariable String name) {
         return Heroes
                 .stream()
-                .filter(hero->hero.equalsIgnoreCase(name))
+                .filter(hero -> hero.equalsIgnoreCase(name))
                 .findFirst().orElse("");
     }
 }

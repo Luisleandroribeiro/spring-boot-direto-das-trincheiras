@@ -4,9 +4,7 @@ import academy.devdojo.domain.User;
 import academy.devdojo.exception.NotFoundException;
 import academy.devdojo.repository.UserHardCodedRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -34,7 +32,12 @@ public class UserService {
     }
 
     public void update(User userToUpdate) {
-        var user = findByIdOrThrowNotFound(userToUpdate.getId());
+        AssertUserExists(userToUpdate.getId());
         repository.update(userToUpdate);
     }
+
+    public void AssertUserExists(Long id) {
+        findByIdOrThrowNotFound(id);
+    }
+
 }

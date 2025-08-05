@@ -3,7 +3,6 @@ package academy.devdojo.controller;
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
-import academy.devdojo.repository.UserData;
 import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -34,8 +33,6 @@ class UserControllerTest {
     private static final String URL = "/v1/users";
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private UserData userData;
     @MockBean
     private UserRepository repository;
     private List<User> userList;
@@ -82,7 +79,6 @@ class UserControllerTest {
     @DisplayName("GET v1/users?firstName=x returns empty list when first name is not found")
     @Order(3)
     void findAll_ReturnsEmptyList_WhenFirstNameIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var response = fileUtils.readResourceFile("user/get-user-x-first-name-200.json");
         var firstName = "x";
 
@@ -96,7 +92,6 @@ class UserControllerTest {
     @DisplayName("GET v1/users/1 returns an user with given id")
     @Order(4)
     void findById_ReturnsUserById_WhenSuccessful() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var response = fileUtils.readResourceFile("user/get-user-by-id-200.json");
         var id = 1L;
         var findUser = userList.stream().filter(user -> user.getId().equals(id)).findFirst();
@@ -112,7 +107,6 @@ class UserControllerTest {
     @DisplayName("GET v1/users/99 throws NotFoundException 404 when user is not found")
     @Order(5)
     void findById_ThrowsNotFoundException_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var response = fileUtils.readResourceFile("user/get-user-by-id-404.json");
 
         var id = 99L;
@@ -161,7 +155,6 @@ class UserControllerTest {
     @DisplayName("DELETE v1/users/99 throws NotFoundException when user is not found")
     @Order(8)
     void delete_ThrowsNotFoundException_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var response = fileUtils.readResourceFile("user/delete-user-by-id-404.json");
         var id = 99L;
 
@@ -193,7 +186,6 @@ class UserControllerTest {
     @DisplayName("PUT v1/users throws NotFoundException when user is not found")
     @Order(10)
     void update_ThrowsNotFoundException_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var request = fileUtils.readResourceFile("user/put-request-user-404.json");
         var response = fileUtils.readResourceFile("user/put-user-by-id-404.json");
         mockMvc.perform(MockMvcRequestBuilders

@@ -2,11 +2,11 @@ spring:
   config:
     import: optional:classpath:.env[.properties]
   application:
-    name: anime-service
+    name: user-service
   datasource:
-    url: jdbc:mysql://localhost:3306/user_service?userTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: ${ENV_ROOT_USER}
-    password: ${ENV_ROOT_PASSWORD}
+    url: jdbc:mysql://localhost:3306/user_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: ${ENV_ROOT_USER:root}
+    password: ${ENV_ROOT_PASSWORD:devdojo}
   jpa:
     show-sql: true
     hibernate:
@@ -22,6 +22,7 @@ server:
   port: 8080
   servlet:
     context-path: /
+
   error:
     include-stacktrace: on_param
   tomcat:

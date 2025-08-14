@@ -1,11 +1,5 @@
-package academy.devdojo.controller;
+package academy.devdojo.producer;
 
-import academy.devdojo.mapper.ProducerMapper;
-import academy.devdojo.request.ProducerPostRequest;
-import academy.devdojo.request.ProducerPutRequest;
-import academy.devdojo.response.ProducerGetResponse;
-import academy.devdojo.response.ProducerPostResponse;
-import academy.devdojo.service.ProducerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

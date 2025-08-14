@@ -1,8 +1,7 @@
-package academy.devdojo.service;
+package academy.devdojo.anime;
 
 import academy.devdojo.commons.AnimeUtils;
 import academy.devdojo.domain.Anime;
-import academy.devdojo.repository.AnimeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,11 +12,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.class)
@@ -42,9 +41,8 @@ class AnimeServiceTest {
     void findAll_ReturnsAllAnimes_WhenArgumentIsNull() {
         BDDMockito.when(repository.findAll()).thenReturn(animesList);
         var animes = service.findAll(null);
-        Assertions.assertThat(animes)
-                .isNotNull()
-                .hasSize(animesList.size());
+        Assertions.assertThat(animes).isNotNull().hasSameElementsAs(animesList);
+
     }
 
     @Test
@@ -52,8 +50,8 @@ class AnimeServiceTest {
     @Order(2)
     void findByName_ReturnsFoundAnimeInList_WhenNameIsFound() {
         var anime = animesList.getFirst();
-        List<Anime> expectedAnimesFound = Collections.singletonList(anime);
-        BDDMockito.when(repository.findByName(anime.getName())).thenReturn(expectedAnimesFound);
+        var expectedAnimesFound = singletonList(anime);
+        BDDMockito.when(repository.findByNameIgnoreCase(anime.getName())).thenReturn(expectedAnimesFound);
 
         var animesFound = service.findAll(anime.getName());
         Assertions.assertThat(animesFound)
@@ -65,7 +63,7 @@ class AnimeServiceTest {
     @Order(3)
     void findByName_ReturnsEmptyList_WhenNameIsNotFound() {
         var name = "not-found";
-        BDDMockito.when(repository.findByName(name)).thenReturn(emptyList());
+        BDDMockito.when(repository.findByNameIgnoreCase(name)).thenReturn(emptyList());
 
         var animes = service.findAll(name);
         Assertions.assertThat(animes)
@@ -141,7 +139,7 @@ class AnimeServiceTest {
         var animeToUpdate = animesList.getFirst();
         animeToUpdate.setName("Grand Blue");
         BDDMockito.when(repository.findById(animeToUpdate.getId())).thenReturn(Optional.of(animeToUpdate));
-        BDDMockito.doNothing().when(repository).update(animeToUpdate);
+        BDDMockito.when(repository.save(animeToUpdate)).thenReturn(animeToUpdate);
 
 
         Assertions.assertThatNoException()

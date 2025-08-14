@@ -1,4 +1,4 @@
-package academy.devdojo.request;
+package academy.devdojo.anime;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class ProducerPostRequest {
+public class AnimePostRequest {
     @NotBlank(message = "The field 'name' is required")
     private String name;
 }

@@ -1,4 +1,4 @@
-package academy.devdojo.request;
+package academy.devdojo.anime;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

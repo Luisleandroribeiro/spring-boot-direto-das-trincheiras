@@ -1,10 +1,9 @@
-package academy.devdojo.repository;
+package academy.devdojo.anime;
 
 import academy.devdojo.domain.Anime;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface AnimeRepository extends JpaRepository<Anime, Long> {

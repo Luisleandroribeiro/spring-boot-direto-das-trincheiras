@@ -11,6 +11,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ class ProducerControllerTest {
     private static final String URL = "/v1/producers";
     @Autowired
     private MockMvc mockMvc;
-    @SpyBean
+    @MockBean
     private ProducerRepository repository;
     private List<Producer> producerList;
     @Autowired

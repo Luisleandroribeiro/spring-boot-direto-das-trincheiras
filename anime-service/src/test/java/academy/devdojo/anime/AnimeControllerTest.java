@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(controllers = AnimeController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = "academy.devdojo")
+@ComponentScan(basePackages = {"academy.devdojo.anime", "academy.devdojo.commons"})
 class AnimeControllerTest {
     private static final String URL = "/v1/animes";
     @Autowired
@@ -51,7 +51,7 @@ class AnimeControllerTest {
     @Order(1)
     void findAll_ReturnsAllAnimes_WhenArgumentIsNull() throws Exception {
         BDDMockito.when(repository.findAll()).thenReturn(animesList);
-        var response = fileUtils.readResourceFile("anime/get-anime-null-name-200.json");
+        var response = fileUtils.readResourceFile("anime/get-animes-null-name-200.json");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andDo(MockMvcResultHandlers.print())

@@ -18,7 +18,7 @@ import java.util.List;
 public class AnimeHardcodedRepositoryTest {
 
     @InjectMocks
-    private AnimeHardcodedRepository repository;
+    private AnimeRepository repository;
     @Mock
     private AnimeData animeData;
     private List<Anime> animeList;
@@ -114,7 +114,7 @@ public class AnimeHardcodedRepositoryTest {
         var animeToUpdate = this.animeList.getFirst();
         animeToUpdate.setName("Hellsing");
 
-        repository.update(animeToUpdate);
+        repository.save(animeToUpdate);
 
         Assertions.assertThat(this.animeList).contains(animeToUpdate);
 

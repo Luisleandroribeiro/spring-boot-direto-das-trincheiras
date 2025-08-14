@@ -2,7 +2,7 @@ package academy.devdojo.service;
 
 import academy.devdojo.commons.AnimeUtils;
 import academy.devdojo.domain.Anime;
-import academy.devdojo.repository.AnimeHardcodedRepository;
+import academy.devdojo.repository.AnimeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ class AnimeServiceTest {
     @InjectMocks
     private AnimeService service;
     @Mock
-    private AnimeHardcodedRepository repository;
+    private AnimeRepository repository;
     private List<Anime> animesList;
     @InjectMocks
     private AnimeUtils animeUtils;

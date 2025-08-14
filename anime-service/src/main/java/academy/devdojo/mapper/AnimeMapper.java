@@ -14,7 +14,6 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AnimeMapper {
 
-    @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
     Anime toAnime(AnimePostRequest postRequest);
 
     Anime toAnime(AnimePutRequest request);

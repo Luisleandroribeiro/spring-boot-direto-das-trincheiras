@@ -2,7 +2,7 @@ package academy.devdojo.service;
 
 import academy.devdojo.domain.Producer;
 import academy.devdojo.exception.NotFoundException;
-import academy.devdojo.repository.ProducerHardCodedRepository;
+import academy.devdojo.repository.ProducerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 //o atributo só é injetado no construtor se ele tiver o "final". Por questões de seguranças como a imutabilidade e também para facilitação de testes é recomendado utilizar o "final", além do Single Responsibility Principle.
 public class ProducerService {
-    private final ProducerHardCodedRepository repository;
+    private final ProducerRepository repository;
 
 
     public List<Producer> findAll(String name) {
-        return name == null ? repository.findAll() : repository.findByName(name);
+        return name == null ? repository.findAll() : repository.findByNameIgnoreCase(name);
     }
 
     public Producer findByIdOrThrowNotFound(Long id) {
@@ -37,7 +37,7 @@ public class ProducerService {
     public void update(Producer producerToUpdate) {
         var producer = findByIdOrThrowNotFound(producerToUpdate.getId());
         producerToUpdate.setCreatedAt(producer.getCreatedAt());
-        repository.update(producerToUpdate);
+        repository.save(producerToUpdate);
     }
 
 

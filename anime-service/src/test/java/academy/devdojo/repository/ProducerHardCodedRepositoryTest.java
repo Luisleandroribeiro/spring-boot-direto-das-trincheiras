@@ -16,9 +16,7 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProducerHardCodedRepositoryTest {
     @InjectMocks
-    private ProducerHardCodedRepository respository;
-    @Mock
-    private ProducerData producerData;
+    private ProducerRepository respository;
     private List<Producer> producerList;
     @InjectMocks
     private ProducerUtils producerUtils;

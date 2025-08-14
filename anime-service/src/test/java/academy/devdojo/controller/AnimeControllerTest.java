@@ -3,8 +3,7 @@ package academy.devdojo.controller;
 import academy.devdojo.commons.AnimeUtils;
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.domain.Anime;
-import academy.devdojo.repository.AnimeData;
-import academy.devdojo.repository.AnimeHardcodedRepository;
+import academy.devdojo.repository.AnimeRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -36,10 +35,8 @@ class AnimeControllerTest {
     private static final String URL = "/v1/animes";
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private AnimeData animeData;
     @SpyBean
-    private AnimeHardcodedRepository repository;
+    private AnimeRepository repository;
     private List<Anime> animesList;
     @Autowired
     private ResourceLoader resourceLoader;

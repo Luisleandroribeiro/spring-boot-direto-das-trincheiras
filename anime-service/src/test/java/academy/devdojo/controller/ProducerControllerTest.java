@@ -3,8 +3,7 @@ package academy.devdojo.controller;
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
-import academy.devdojo.repository.ProducerData;
-import academy.devdojo.repository.ProducerHardCodedRepository;
+import academy.devdojo.repository.ProducerRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -36,10 +35,8 @@ class ProducerControllerTest {
     private static final String URL = "/v1/producers";
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private ProducerData producerData;
     @SpyBean
-    private ProducerHardCodedRepository repository;
+    private ProducerRepository repository;
     private List<Producer> producerList;
     @Autowired
     private FileUtils fileUtils;

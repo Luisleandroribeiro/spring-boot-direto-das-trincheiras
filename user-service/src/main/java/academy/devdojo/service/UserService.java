@@ -5,13 +5,9 @@ import academy.devdojo.exception.EmailAlreadyExistsException;
 import academy.devdojo.exception.NotFoundException;
 import academy.devdojo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +23,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not Found"));
     }
 
+    //    @Transactional(rollbackFor = Exception.class)
     public User save(User user) {
         assertEmailDoesNotExist(user.getEmail());
         return repository.save(user);
@@ -39,7 +36,7 @@ public class UserService {
 
     public void update(User userToUpdate) {
         assertUserExists(userToUpdate.getId());
-        assertEmailDoesNotExist(userToUpdate.getEmail(),  userToUpdate.getId());
+        assertEmailDoesNotExist(userToUpdate.getEmail(), userToUpdate.getId());
         repository.save(userToUpdate);
     }
 

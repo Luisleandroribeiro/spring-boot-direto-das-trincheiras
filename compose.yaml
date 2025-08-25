@@ -1,6 +1,7 @@
 services:
   mysql:
     image: mysql:9.4.0
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${ENV_ROOT_PASSWORD}
       MYSQL_USER: ${ENV_MYSQL_USER}

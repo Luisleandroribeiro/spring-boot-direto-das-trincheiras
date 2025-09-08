@@ -9,6 +9,7 @@ import java.util.List;
 @Component
 public class UserUtils {
 
+
     public List<User> newUserList() {
         var luis = User.builder().id(1L).firstName("Luis").lastName("Ribeiro").email("luis@gmail.com").build();
         var felipe = User.builder().id(2L).firstName("Felipe").lastName("Pires").email("felipe@gmail.com").build();
@@ -17,6 +18,13 @@ public class UserUtils {
     }
 
     public User newUserToSave() {
+        return User.builder()
+                .firstName("Andrew")
+                .lastName("Polo")
+                .email("andrew@gmail.com")
+                .build();
+    }
+    public User newUserSaved() {
         return User.builder()
                 .id(99L)
                 .firstName("Andrew")
